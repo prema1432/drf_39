@@ -10,3 +10,11 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class School(models.Model):
+    name = models.CharField(max_length=300)
+    address = models.CharField(max_length=560)
+
+    def __str__(self):
+        return self.name
