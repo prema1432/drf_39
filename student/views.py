@@ -13,7 +13,7 @@ from rest_framework import status
 
 class StudentAPI(APIView):
     def get(self, request):
-        students = Student.objects.all()
+        students = Student.objects.all().order_by('-id')
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 

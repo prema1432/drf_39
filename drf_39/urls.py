@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 
 from student.views import StudentAPI, StudentDetail, SchoolAPI
 
@@ -26,3 +26,5 @@ urlpatterns = [
 
     path("school/", SchoolAPI.as_view(), name="SchoolAPI")
 ]
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
