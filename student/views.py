@@ -1,5 +1,9 @@
 from django.http import Http404
 from django.shortcuts import render
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,8 +16,15 @@ from rest_framework import status
 # Create your views here.
 
 class StudentAPI(APIView):
+    # authentication_classes = [BasicAuthentication]  # this basic authentication
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
+        # if request.user.roles == "admin:"
         students = Student.objects.all().order_by('-id')
+        # elif request.user.roles == "customer":
+        #     students = Student.objects.filter(user=request.user)
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 
@@ -97,6 +108,7 @@ class SchoolAPI(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # crud == Create Read Update Delete
 #
 # student== get,post,put,patch,delete
@@ -107,3 +119,11 @@ class SchoolAPI(APIView):
 # put -
 # patch - id
 # delete -di
+
+class GetTokenAPI(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})

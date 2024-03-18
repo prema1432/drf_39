@@ -15,16 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 
-from student.views import StudentAPI, StudentDetail, SchoolAPI
+from student.views import StudentAPI, StudentDetail, SchoolAPI, GetTokenAPI
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("student/", StudentAPI.as_view(), name="student_get_api"),
     path("student/<int:pk>/", StudentDetail.as_view(), name="student_detail_api"),
 
-    path("school/", SchoolAPI.as_view(), name="SchoolAPI")
+    path("school/", SchoolAPI.as_view(), name="SchoolAPI"),
+    path("get_token/", GetTokenAPI.as_view(), name="GetTokenAPI")
 ]
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
