@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from student.views import StudentAPI, StudentDetail, SchoolAPI, GetTokenAPI
 
@@ -25,7 +26,10 @@ urlpatterns = [
     path("student/<int:pk>/", StudentDetail.as_view(), name="student_detail_api"),
 
     path("school/", SchoolAPI.as_view(), name="SchoolAPI"),
-    path("get_token/", GetTokenAPI.as_view(), name="GetTokenAPI")
+    path("get_token/", GetTokenAPI.as_view(), name="GetTokenAPI"),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
