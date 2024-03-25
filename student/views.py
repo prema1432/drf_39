@@ -316,13 +316,20 @@ class CartAPI(APIView):
 
             cart_total_price_with_discount = item["product"]["price"] * item["quantity"] + cart_total_price_with_discount
 
+            if item["product"]["offer_type"] == "FLAT":
+                savings = item["product"]["offer_amount"] * item["quantity"] +savings
+            else:
+                # savings = item["product"]["price"] * item["quantity"] * (  item["product"]["offer_amount"]) / 100 + savings
+                savings = item["product"]["price"] * item["quantity"] / 100 * item["product"]["offer_amount"] + savings
+
+        cart_total_price = cart_total_price_with_discount - savings
         # cart_total_price_with_discount = cart_total_price_with_di
         # return Response(serializer.data)
         return Response(
             {
                 "data": data,
                 "cart_total_price": cart_total_price,
-                "cart_total_price_with_discount": cart_total_price_with_discount,
+                "cart_total_price_with_out_discount": cart_total_price_with_discount,
                 "savings": savings
             }
         )
